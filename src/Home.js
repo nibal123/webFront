@@ -72,7 +72,7 @@ const Home = () => {
   const handleCollapsedChange = (checked) => {
     setCollapsed(checked);
   };
-
+var index=1;
   const handleRtlChange = (checked) => {
     setRtl(checked);
   };
@@ -226,6 +226,7 @@ const Home = () => {
                     Add a camera IP address to start cracks detection of pipes
                     or roads.
                   </Card.Text> */}
+                  
                   <table>
                     <thead>
                       <tr>
@@ -236,20 +237,23 @@ const Home = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {user.pipesIP.map((item, index) => {
+                      {user.pipesIP.map((item) => {
+                        // {setIndex(index+1)}
                         return (
                           <tr>
-                            <th>{index + 1}</th>
+                            <th>{index++}</th>
                             <th>{item.name}</th>
                             <th>{item.IP}</th>
                             <th>{item.port}</th>
                           </tr>
                         );
                       })}
-                      {user.roadsIP.map((item, index) => {
+                      {user.roadsIP.map((item) => {
+                        //  {setIndex(index+1)}
                         return (
                           <tr>
-                            <th>{index + 1}</th>
+                            <th>{index++}</th>
+                            
                             <th>{item.name}</th>
                             <th>{item.IP}</th>
                             <th>{item.port}</th>

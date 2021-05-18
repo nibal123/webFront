@@ -115,6 +115,10 @@ class Firebase {
         .then(() => {
           // Document updated successfully.
           console.log("Doc updated successfully");
+          toast.success("Updated successfully", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+          });
         });
     } else {
       return this.db

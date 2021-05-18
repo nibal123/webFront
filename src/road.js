@@ -1,161 +1,335 @@
-import React, { useContext, useState } from 'react';
-import axios from 'axios'
-import {Button} from "react-bootstrap"
-import {userContext} from "./User"
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { Button, DropdownButton, Dropdown } from "react-bootstrap";
+import { userContext } from "./User";
 import { useHistory } from "react-router-dom";
 import firebase from "./Firebase";
 import Nav from "./nav";
-import Control from './control';
-import Loader from './loader';
-import sidebar from './sidebar';
-const Road=()=>{
-    const {value,roadIP,pipeIP} = useContext(userContext);
-    const [user,setUser]=value;
-    const [pipesIP,setpipeIP]=pipeIP;
-   const [Ip,setIP]=roadIP;
+import Control from "./control";
+import Loader from "./loader";
+import sidebar from "./sidebar";
+import Modal from "react-bootstrap/Modal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Card from "react-bootstrap/Card";
+import * as FiIcons from "react-icons/fi";
+import * as MdIcons from "react-icons/md";
 
-    // const [Ip,setIP]=useState("");
-    // const [port,setPort]=useState("");
-    const [address,setAddress]=useState("");
-    const [src,setSrc]=useState("");
-    const [command,setCommand]=useState("");
-    const history = useHistory();
-  const [error,setError]=useState(false);
-  const [timer,setTimer]=useState(true);
-  const [admin,setAdmin]=useState(user.admin);
+toast.configure();
+
+const Road = () => {
+  const {
+    value,
+    roadIP,
+    pipeIP,
+    showPipes,
+    showRoads,
+    clickedItem,
+  } = useContext(userContext);
+
+  
+  const [roads, setRoads] = showRoads;
+  const [clicked, setClicked] = clickedItem;
+  const [pipes, setPipes] = showPipes;
+  const [user, setUser] = value;
+  // const [pipesIP,setpipeIP]=useState(pipeIP);
+  const [Ip, setIP] = roadIP;
+  console.log(Ip);
+  // const [Ip,setIP]=useState("");
+  // const [port,setPort]=useState("");
+  const [address, setAddress] = useState("");
+  const [src, setSrc] = useState("");
+  const [command, setCommand] = useState("");
+  const history = useHistory();
+  const [error, setError] = useState(false);
+  const [timer, setTimer] = useState(true);
+  const [admin, setAdmin] = useState(user.admin);
+  const [show, setShow] = useState(false);
+  const [showD, setShowD] = useState(false);
+  const [date, setDate] = useState("");
+
+  const [imageIndex, setImageIndex] = useState(0);
+
+  const handleCloseD = () => setShowD(false);
+  const handleShowD = () => setShowD(true);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   if (!firebase.getCurrentUsername()) {
     alert("Please login first");
     history.push("/login");
   }
-// if(user.admin === true){
-//   var docRef = firebase.db
-//           .collection("ip")
-//           .doc("SlfW909pz3s1NcK0hJIg");
-//         docRef
-//           .get()
-//           .then(function (doc) {
-//             if (doc.exists) {
-//   setSrc(`http://${doc.ip}:${doc.port}`);  
-// }}
+  useEffect(() => {
+
+    const interval = setInterval(() => {
+      var x=imageIndex+1;
+      setImageIndex(x);
+      if(imageIndex%2==0)
+      setSrc("http://176.119.254.185:7004/frames/output/image.jpg");
+      else
+      setSrc("http://176.119.254.185:7004/frames/output/image0.jpg");
+      var date=new Date().getTime().toString().slice(0,10);
+      setDate(date);
+     
+      setError(false);
+      console.log(src);
+    }, 100);
+    return () => clearInterval(interval);
+   
+  },);
+
+//   function update() {
+//     setSrc("")
+//     var source = 'http://192.168.1.53/html/cam.jpg',
+//         timestamp = (new Date()).getTime(),
+//         newUrl = source + '?_=' + timestamp;
+//     document.getElementById("img").src = newUrl;
+//     document.getElementById("img1").src =  newUrl;
+//     setTimeout(update, 1000);
 // }
-if(user.admin === false){
-var docRef = firebase.db
-        .collection("ip")
-        .doc("SlfW909pz3s1NcK0hJIg");
-      docRef
-        .get()
-        .then(function (doc) {
-          if (doc.exists) {
-            setSrc(`http://${doc.data().ip}:${doc.data().port}`);  
-            console.log(src);
-         
-         
-          } 
-           
-          
-        })
-        .catch(function (error) {
-          console.log("Error getting document:", error);
-        });
-      }
+
+  // if (user.admin === false) {
+  //   var docRef = firebase.db.collection("ip").doc("SlfW909pz3s1NcK0hJIg");
+  //   docRef
+  //     .get()
+  //     .then(function (doc) {
+  //       if (doc.exists) {
+  //         setSrc(`http://${doc.data().ip}:${doc.data().port}`);
+  //         console.log(src);
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       console.log("Error getting document:", error);
+  //     });
+  // }
 
   setTimeout(() => {
     setTimer(false);
-    }, 2000);
-    
-console.log(user);
-const [rtl, setRtl] = useState(false);
-const [collapsed, setCollapsed] = useState(false);
-const [image, setImage] = useState(true);
-const [toggled, setToggled] = useState(false);
+  }, 2000);
 
-const handleCollapsedChange = (checked) => {
-  setCollapsed(checked);
-};
+  console.log(Ip);
+  const [rtl, setRtl] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [image, setImage] = useState(true);
+  const [toggled, setToggled] = useState(false);
 
-const handleRtlChange = (checked) => {
-  setRtl(checked);
- 
-};
-const handleImageChange = (checked) => {
-  setImage(checked);
-};
+  const handleCollapsedChange = (checked) => {
+    setCollapsed(checked);
+  };
 
-const handleToggleSidebar = (value) => {
-  setToggled(value);
-};
+  const handleRtlChange = (checked) => {
+    setRtl(checked);
+  };
+  const handleImageChange = (checked) => {
+    setImage(checked);
+  };
 
-    return (
-    <div className="home">
+  const handleToggleSidebar = (value) => {
+    setToggled(value);
+  };
+  const deleteCam = (e) => {
+    const userr = user;
+    var index = -1;
+    for (var i = 0; i < user.roadsIP.length; i++) {
+      if (user.roadsIP[i].IP == Ip.IP && user.roadsIP[i].port == Ip.port)
+        index = i;
+    }
+    if (index > -1) {
+      userr.roadsIP.splice(index, 1);
+    }
+    setUser(userr);
+    firebase.saveCamera("roads", user, firebase.getCurrentUserId());
+    handleCloseD();
+    history.push("/home");
+    setClicked("Home");
+    setPipes(false);
+    setRoads(false);
+  };
 
-
-{timer === true ?    
-       <div id="loader" className="load">
-  <Loader></Loader> </div>  : <div>
-      <Nav value={"home"}></Nav>
-    
-        <div className="row">
-         
-        <div className={user.admin === true ? "col-lg-7" : "user"}>     {user.admin === true ?  
-            <div className="home">
-              <input type="text" placeholder="Please enter IP address : port" onChange={(e)=>{setAddress(e.target.value)}}/>
-              <Button onClick={()=>{
-                setIP({IP:address.split(":")[0], port:address.split(":")[1]});
-                // (address.split(":")[1]);
-                setSrc(`http://${Ip.IP}:${Ip.port}`);      
-                setError(false);
-                // firebase.saveIp(Ip,port);
-              
-              }}>Start Capturing</Button></div> : ""}
-                <img  onError={(ev)=>{
-          setError(true);
-        }} src={`http://169.254.47.150:8081/`} alt="Straming Video"></img> </div>
-           
-        {user.admin === true && !error ?  <img onError={(ev)=>{
-          setError(true);
-        }} src={src} alt="Straming Video"></img>  : ""}
-        {user.admin === true ?  
-        <div className="col-lg-4 down">
- <div className=" control">
-           <div className="triangle-up" onClick={()=>{
-          setCommand("Up");
-          axios.request(`http://192.168.1.89:5000/control/up?ip=${Ip.IP}&port=${Number(Ip.port)}`);
-        }}> <p>U</p></div>
-           <div className="control-lr">
-           <div className="triangle-left" onClick={()=>{
-          setCommand("Left");
-          axios.request(`http://192.168.1.89:5000/control/left?ip=${Ip.IP}&port=${Number(Ip.port)}`);
-        }}><p>L</p></div>
-
-        <div className="triangle-right" onClick={()=>{
-          setCommand("Right");
-          axios.request(`http://192.168.1.89:5000/control/right?ip=${Ip.IP}&port=${Number(Ip.port)}`);
-             
-        }}><p>R</p></div>
+  return (
+    <div className="pipe-home">
+      {timer === true ? (
+        <div id="loader" className="load">
+          <Loader></Loader>{" "}
         </div>
-        <div  className="triangle-down" onClick={()=>{
-          setCommand("Down");
-          axios.request(`http://192.168.1.89:5000/control/down?ip=${Ip.IP}&port=${Number(Ip.port)}`);
-        }}>
-          <p>D</p>
-        </div>
-        </div>
-        </div>
-        : "" }
-        
-        </div>
-       
+      ) : (
         <div>
+          <div className="cam-container">
+            <Dropdown>
+              <Dropdown.Toggle
+                className="settings"
+                id="dropdown-basic"
+                bsPrefix="p-2"
+              >
+                <FiIcons.FiSettings />
+              </Dropdown.Toggle>
 
-     
-   </div>  
-   
-      </div>
-      }
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={handleShow}>
+                  Show Cam's Info
+                </Dropdown.Item>
+                <Dropdown.Item
+                  style={{ color: "salmon" }}
+                  onClick={handleShowD}
+                >
+                  Delete
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+          <div className="row">
+            <div className="col-md-2"></div>
+            <div
+              className={
+                user.admin === true ? "col-md-6 video" : "col-md-9 video"
+              }
+            >
+             
+              {user.admin === false && !error &&date ? (
+                <img
+                  onError={(ev) => {
+                    setError(true);
+                  }}
+                  key={date}
+                  id={date}
+                  src={src}
+                  alt="Straming Video"
+                ></img>
+              ) : (
+                <>
+                  <Loader></Loader>
+                  <div>
+                    <p>Waiting for camera to start streaming </p>
+                  </div>
+                </>
+              )}
+            </div>
 
-      </div>
-    );
+            {user.admin === true ? (
+              <div className="col-lg-3 down">
+                <div className=" control">
+                  <span
+                    class="dot"
+                    onClick={() => {
+                      setCommand("Up");
+                      axios.request(
+                        `http://192.168.1.89:5000/control/up?ip=${
+                          Ip.IP
+                        }&port=${Number(Ip.port)}`
+                      );
+                    }}
+                  >
+                    <MdIcons.MdKeyboardArrowUp />
+                  </span>
+                  <div className="control-lr">
+                    <span
+                      class="dot"
+                      onClick={() => {
+                        setCommand("Left");
+                        axios.request(
+                          `http://192.168.1.89:5000/control/left?ip=${
+                            Ip.IP
+                          }&port=${Number(Ip.port)}`
+                        );
+                      }}
+                    >
+                      <MdIcons.MdKeyboardArrowLeft />
+                    </span>
 
+                    <span
+                      class="dot"
+                      onClick={() => {
+                        setCommand("Right");
+                        axios.request(
+                          `http://192.168.1.89:5000/control/right?ip=${
+                            Ip.IP
+                          }&port=${Number(Ip.port)}`
+                        );
+                      }}
+                    >
+                      <MdIcons.MdKeyboardArrowRight />
+                    </span>
+                  </div>
+
+                  <span
+                    class="dot"
+                    onClick={() => {
+                      setCommand("Down");
+                      axios.request(
+                        `http://192.168.1.89:5000/control/down?ip=${
+                          Ip.IP
+                        }&port=${Number(Ip.port)}`
+                      );
+                    }}
+                  >
+                    <MdIcons.MdKeyboardArrowDown />
+                  </span>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+
+          <div></div>
+        </div>
+      )}
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Body>
+          <Card style={{ minWidth: "40%" }}>
+            <Card.Header>
+              <div className="header-card gray">Camera's Info</div>
+            </Card.Header>
+            <Card.Body>
+              <div className="form">
+                <form className="d-flex flex-column ">
+                  <label for="name">Name</label>
+                  <input
+                    className={"input"}
+                    name="name"
+                    placeholder="Name"
+                    value={Ip.name}
+                  />
+                  <label for="IP">IP</label>
+                  <input
+                    className={"input"}
+                    name="IP"
+                    placeholder="IP"
+                    value={Ip.IP}
+                  />
+                  <label for="port">Port</label>
+                  <input
+                    className={"input"}
+                    name="port"
+                    placeholder="Port"
+                    value={Ip.port}
+                  />
+                </form>
+              </div>
+            </Card.Body>
+          </Card>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showD} onHide={handleCloseD}>
+        <Modal.Body>Are you sure you want to delete this cam?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={deleteCam}>
+            Yes
+          </Button>
+          <Button variant="secondary" onClick={handleCloseD}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
 };
 export default Road;

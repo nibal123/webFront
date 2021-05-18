@@ -26,6 +26,8 @@ const Pipe = () => {
     showRoads,
     clickedItem,
   } = useContext(userContext);
+
+  
   const [roads, setRoads] = showRoads;
   const [clicked, setClicked] = clickedItem;
   const [pipes, setPipes] = showPipes;
@@ -44,6 +46,9 @@ const Pipe = () => {
   const [admin, setAdmin] = useState(user.admin);
   const [show, setShow] = useState(false);
   const [showD, setShowD] = useState(false);
+  const [date, setDate] = useState("");
+
+  const [imageIndex, setImageIndex] = useState(0);
 
   const handleCloseD = () => setShowD(false);
   const handleShowD = () => setShowD(true);
@@ -56,9 +61,33 @@ const Pipe = () => {
     history.push("/login");
   }
   useEffect(() => {
-    setSrc(`http://${Ip.IP}:${Ip.port}`);
-    console.log(src);
-  });
+
+    const interval = setInterval(() => {
+      var x=imageIndex+1;
+      setImageIndex(x);
+      if(imageIndex%2==0)
+      setSrc("http://176.119.254.185:7004/frames/output/image.jpg");
+      else
+      setSrc("http://176.119.254.185:7004/frames/output/image0.jpg");
+      var date=new Date().getTime().toString().slice(0,10);
+      setDate(date);
+     
+      setError(false);
+      console.log(src);
+    }, 100);
+    return () => clearInterval(interval);
+   
+  },);
+
+//   function update() {
+//     setSrc("")
+//     var source = 'http://192.168.1.53/html/cam.jpg',
+//         timestamp = (new Date()).getTime(),
+//         newUrl = source + '?_=' + timestamp;
+//     document.getElementById("img").src = newUrl;
+//     document.getElementById("img1").src =  newUrl;
+//     setTimeout(update, 1000);
+// }
 
   // if (user.admin === false) {
   //   var docRef = firebase.db.collection("ip").doc("SlfW909pz3s1NcK0hJIg");
@@ -156,11 +185,14 @@ const Pipe = () => {
                 user.admin === true ? "col-md-6 video" : "col-md-9 video"
               }
             >
-              {user.admin === true && !error ? (
+             
+              {user.admin === false && !error &&date ? (
                 <img
                   onError={(ev) => {
                     setError(true);
                   }}
+                  key={date}
+                  id={date}
                   src={src}
                   alt="Straming Video"
                 ></img>
