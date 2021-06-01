@@ -68,8 +68,10 @@ const Pipe = () => {
       if(imageIndex%2==0)
       setSrc("http://176.119.254.185:7004/frames/output/image.jpg");
       else
-      setSrc("http://176.119.254.185:7004/frames/output/image0.jpg");
+      // setSrc("http://176.119.254.185:7004/frames/output/image0.jpg");
+      setSrc("http://176.119.254.185:7004/frames/output/image"+date+".jpg");
       var date=new Date().getTime().toString().slice(0,10);
+    
       setDate(date);
      
       setError(false);
