@@ -63,20 +63,25 @@ const Pipe = () => {
   useEffect(() => {
 
     const interval = setInterval(() => {
-      var x=imageIndex+1;
+      var x=imageIndex+3;
       setImageIndex(x);
-      if(imageIndex%2==0)
-      setSrc("http://176.119.254.185:7004/frames/output/image.jpg");
-      else
-      // setSrc("http://176.119.254.185:7004/frames/output/image0.jpg");
-      setSrc("http://176.119.254.185:7004/frames/output/image"+date+".jpg");
-      var date=new Date().getTime().toString().slice(0,10);
+      var datee=new Date();
+      datee.setMinutes( datee.getMinutes() - 3 );
+      datee.setSeconds( datee.getSeconds() - 40 );
+      var date=new Date(datee).getTime().toString().slice(0,10);
+      console.log(date)
+      // if(imageIndex%2==0)
+      // setSrc("http://176.119.254.185:7004/socket/image.jpg");
+      // else
+
+      // setSrc("http://176.119.254.185:7004/frames/output/output/image"+date+".jpg");
+    
     
       setDate(date);
      
       setError(false);
       console.log(src);
-    }, 100);
+    }, 500);
     return () => clearInterval(interval);
    
   },);
@@ -188,14 +193,14 @@ const Pipe = () => {
               }
             >
              
-              {user.admin === false && !error &&date ? (
+              { !error ? (
                 <img
                   onError={(ev) => {
                     setError(true);
                   }}
                   key={date}
                   id={date}
-                  src={src}
+                  src="http://176.119.254.185:7004/frames/output/output/image1624116094.jpg"
                   alt="Straming Video"
                 ></img>
               ) : (
@@ -216,7 +221,7 @@ const Pipe = () => {
                     onClick={() => {
                       setCommand("Up");
                       axios.request(
-                        `http://192.168.1.89:5000/control/up?ip=${
+                        `http://localhost:5000/control/up?ip=${
                           Ip.IP
                         }&port=${Number(Ip.port)}`
                       );
@@ -230,7 +235,7 @@ const Pipe = () => {
                       onClick={() => {
                         setCommand("Left");
                         axios.request(
-                          `http://192.168.1.89:5000/control/left?ip=${
+                          `http://localhost:5000/control/left?ip=${
                             Ip.IP
                           }&port=${Number(Ip.port)}`
                         );
@@ -244,7 +249,7 @@ const Pipe = () => {
                       onClick={() => {
                         setCommand("Right");
                         axios.request(
-                          `http://192.168.1.89:5000/control/right?ip=${
+                          `http://localhost:5000/control/right?ip=${
                             Ip.IP
                           }&port=${Number(Ip.port)}`
                         );
@@ -259,7 +264,7 @@ const Pipe = () => {
                     onClick={() => {
                       setCommand("Down");
                       axios.request(
-                        `http://192.168.1.89:5000/control/down?ip=${
+                        `http://localhost:5000/control/down?ip=${
                           Ip.IP
                         }&port=${Number(Ip.port)}`
                       );
